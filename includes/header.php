@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>Widget Corp</title>
+		<title>Administration Panel</title>
 		<link href="stylesheets/adminPanel.css" media="all" rel="stylesheet" type="text/css" />
 	</head>
 	<body>
