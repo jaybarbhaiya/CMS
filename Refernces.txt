@@ -1,0 +1,2 @@
+CMS - http://en.wikipedia.org/wiki/Content_management_system
+MVC in PHP with simple example- http://r.je/mvc-in-php.html
