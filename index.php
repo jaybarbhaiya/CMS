@@ -53,8 +53,8 @@
 	  <div id="content">
         <div class="content_item">
 			<?php if($sel_page) { ?>
-			  <h2><?php echo $sel_page['menu_name']; ?></h2>
-			  <p><?php echo $sel_page['content']; ?></p>
+			  <h2><?php echo htmlentities($sel_page['menu_name']); ?></h2>
+			  <p><?php echo strip_tags(nl2br($sel_page['content']),"<b><br><p><a>"); ?></p>
 			<?php } else { ?>
 			  <h2>Welcome</h2>
 			<?php } ?>  	

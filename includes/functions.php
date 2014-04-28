@@ -42,12 +42,15 @@
 		return $subject_set;
 	}
 	
-	function get_pages_for_subject($subject_id) {
+	function get_pages_for_subject($subject_id, $public = true) {
 		global $connection;
 		$query = "SELECT * 
-				FROM pages 
-				WHERE subject_id = {$subject_id} 
-				ORDER BY position ASC";
+				FROM pages ";
+		$query .= "WHERE subject_id = {$subject_id} "; 
+		if ($public) {
+			$query .= "AND visible = 1 ";
+ 		}
+		$query .= "ORDER BY position ASC";
 		$page_set = mysql_query($query, $connection);
 		confirm_query($page_set);
 		return $page_set;
@@ -85,12 +88,22 @@
 		}
 	}
 
+	function get_default_page($subject_id) {
+		//get all visible pages
+		$page_set = get_pages_for_subject($subject_id,true);
+		if($first_page = mysql_fetch_array($page_set)) {
+			return $first_page;
+		} else {
+			return NULL;
+		}
+	}
+	
 	function find_selected_page() {
 		global $sel_subject;
 		global $sel_page;
 		if (isset($_GET['subj'])) {
 			$sel_subject = get_subject_by_id($_GET['subj']);
-			$sel_page = NULL;
+			$sel_page = get_default_page($sel_subject['id']);
 		} elseif (isset($_GET['page'])) {
 			$sel_subject = NULL;
 			$sel_page = get_page_by_id($_GET['page']);
@@ -108,7 +121,7 @@
 			if ($subject["id"] == $sel_subject['id']) { $output .= " class=\"selected\""; }
 			$output .= "><a href=\"edit_subject.php?subj=" . urlencode($subject["id"]) . 
 				"\">{$subject["menu_name"]}</a></li>";
-			$page_set = get_pages_for_subject($subject["id"]);
+			$page_set = get_pages_for_subject($subject["id"],$public);
 			$output .= "<ul class=\"pages\">";
 			while ($page = mysql_fetch_array($page_set)) {
 				$output .= "<li";
@@ -127,7 +140,7 @@
 		$subject_set = get_all_subjects($public);
 		while ($subject = mysql_fetch_array($subject_set)) {
 			$output .= "<li><a href=\"index.php?subj=" . urlencode($subject["id"]) . "\">{$subject["menu_name"]}</a></li>";
-			$page_set = get_pages_for_subject($subject["id"]);
+			$page_set = get_pages_for_subject($subject["id"],$public);
 			$output .= "<ul class=\"sidebar_item\">";
 			while ($page = mysql_fetch_array($page_set)) {
 				$output .= "<li><a href=\"index.php?page=" . urlencode($page["id"]) . "\">{$page["menu_name"]}</a></li>";
