@@ -1,5 +1,5 @@
 		</div>
-		<div id="footer">Copyright 2007, Widget Corp</div>
+		<div id="footer">Developed by the CMS Group</div>
 	</body>
 </html>
 <?php
