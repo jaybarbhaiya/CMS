@@ -1,5 +1,7 @@
+<?php require_once("includes/session.php"); ?>
 <?php require_once("includes/connection.php"); ?>
 <?php require_once("includes/functions.php"); ?>
+<?php confirm_logged_in(); ?>
 <?php
 	// make sure the subject id sent is an integer
 	if (intval($_GET['subj']) == 0) {
@@ -11,7 +13,12 @@
 	// START FORM PROCESSING
 	// only execute the form processing if the form has been submitted
 	if (isset($_POST['submit'])) {
-
+		$errors = array();
+		
+		$fields_with_lengths = array('menu_name' => 30);
+		$errors = array_merge($errors, check_max_field_lengths($fields_with_lengths, $_POST));
+		
+		// clean up the form data before putting it in the database
 		$subject_id = mysql_prep($_GET['subj']);
 		$menu_name = trim(mysql_prep($_POST['menu_name']));
 		$position = mysql_prep($_POST['position']);
@@ -19,7 +26,7 @@
 		$content = mysql_prep($_POST['content']);
 	
 		// Database submission only proceeds if there were NO errors.
-
+		if (empty($errors)) {
 			$query = "INSERT INTO pages (
 						menu_name, position, visible, content, subject_id
 					) VALUES (
@@ -36,7 +43,7 @@
 				$message .= "<br />" . mysql_error();
 			}
 	
-		// END FORM PROCESSING
+		} // END FORM PROCESSING
 	}
 ?>
 <?php find_selected_page(); ?>

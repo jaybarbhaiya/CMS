@@ -1,6 +1,12 @@
+<?php require_once("includes/session.php"); ?>
 <?php require_once("includes/connection.php"); ?>
 <?php require_once("includes/functions.php"); ?>
 <?php
+	
+	if(logged_in()) {
+		redirect_to("adminpanel.php");
+	}
+	
 	include_once("includes/form_functions.php");
 	
 	//START FORM PROCESSING
@@ -23,6 +29,9 @@
 				// username/password authentication
 				// and only 1 match
 				$found_user = mysql_fetch_array($result_set);
+				$_SESSION['user_id'] = $found_user['id'];
+				$_SESSION['username'] = $found_user['username'];
+				
 				redirect_to("adminpanel.php");
 			} else {
 				// username/password combination was not found in the database
@@ -31,6 +40,9 @@
 			}
 		}
 	} else {
+		if ($_GET['logout'] && $_GET['logout'] == 1) {
+		$message = "You are now logged out.";
+	}
 		$username = "";
 		$password = "";
 	}
