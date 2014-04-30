@@ -40,7 +40,7 @@
 			}
 		}
 	} else {
-		if ($_GET['logout'] && $_GET['logout'] == 1) {
+		if (isset($_GET['logout']) && $_GET['logout'] == 1) {
 		$message = "You are now logged out.";
 	}
 		$username = "";
